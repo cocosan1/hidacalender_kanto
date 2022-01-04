@@ -16,7 +16,7 @@ st.set_page_config(page_title='納期カレンダー作成')
 st.markdown('#### 納期カレンダー作成')
 
 public_holiday_csv_url="https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
-file_name = public_holiday_csv_url.split("/")[-1]
+public_holiday2 = public_holiday_csv_url.split("/")[-1]
 
 # 対象年度
 target_year = 2022
@@ -38,8 +38,8 @@ def get_kadoubi(date):
         return False
     
     # 祝日
-    holidays_df = pd.read_table(file_name, delimiter=',', encoding="SHIFT-JIS")
-    if date.strftime(year + "/" + month + "/" + day) in holidays_df['国民の祝日・休日月日'].tolist():
+    holidays_df = pd.read_table(public_holiday2, delimiter=',', encoding="SHIFT-JIS")
+    if date.strftime(year + "/" + month + "/" + day) in holidays_df['国民の祝日・休日名称'].tolist():
         return False
 
     #　会社の休日
@@ -64,7 +64,7 @@ def get_chakubi(date):
         return False    
 
     # 祝日
-    holidays_df = pd.read_table(file_name, delimiter=',', encoding="SHIFT-JIS")
+    holidays_df = pd.read_table(public_holiday2, delimiter=',', encoding="SHIFT-JIS")
     if date.strftime(year + "/" + month + "/" + day) in holidays_df['国民の祝日・休日月日'].tolist():
         return False
 
@@ -82,7 +82,6 @@ def generate_pdf():
     if uploaded_file:
         df = tabula.read_pdf(uploaded_file, lattice=True) #dfのリストで出力される
     #表が格子状になっている場合 lattice=True そうでない　stream=True　複数ページ読み込み pages='all'
-
     df[0] = df[0].dropna(how='any')
     df[0] = df[0].drop(df[0].columns[[5, 6, 7]], axis=1) #40日から右カラムの削除
     df[0] = df[0].rename(columns={'Unnamed: 0': '受注日', 'KX250AX\rKX260AX': 'SEOTO-EX'})
@@ -239,7 +238,7 @@ if __name__ == '__main__':
 
     # 内閣府から祝日データを取得、更新したいときにTrueにする
     if True:
-        urllib.request.urlretrieve(public_holiday_csv_url, file_name)
+        urllib.request.urlretrieve(public_holiday_csv_url, public_holiday2)
 
     # 稼働日　年始から日付を回す
     date = datetime.datetime(target_year, 1, 1)
