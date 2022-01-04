@@ -3,3 +3,4 @@ pandas
 numpy
 openpyxl
 tabula_py
+java==11.0.9
