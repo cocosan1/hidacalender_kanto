@@ -82,12 +82,17 @@ def generate_pdf():
     if uploaded_file:
         df = tabula.read_pdf(uploaded_file, lattice=True) #dfのリストで出力される
     #表が格子状になっている場合 lattice=True そうでない　stream=True　複数ページ読み込み pages='all'
-    df[0] = df[0].dropna(how='any')
-    df[0] = df[0].drop(df[0].columns[[5, 6, 7]], axis=1) #40日から右カラムの削除
-    df[0] = df[0].rename(columns={'Unnamed: 0': '受注日', 'KX250AX\rKX260AX': 'SEOTO-EX'})
+    df_calend = df[0]
+    df_calend = df_calend.dropna(how='any')
+    df_calend = df_calend.drop(df_calend.columns[[5, 6, 7]], axis=1) #40日から右カラムの削除
+    df_calend = df_calend.rename(columns={'Unnamed: 0': '受注日', 'KX250AX\rKX260AX': 'SEOTO-EX'})
+
+    # df[0] = df[0].dropna(how='any')
+    # df[0] = df[0].drop(df[0].columns[[5, 6, 7]], axis=1) #40日から右カラムの削除
+    # df[0] = df[0].rename(columns={'Unnamed: 0': '受注日', 'KX250AX\rKX260AX': 'SEOTO-EX'})
 
     #曜日を消す
-    df_calend = df[0]
+    # df_calend = df[0]
     df_calend['Aパターン'] = df_calend['Aパターン'].str[:-2]
     df_calend['Bパターン'] = df_calend['Bパターン'].str[:-2]
     df_calend['30日'] = df_calend['30日'].str[:-2]
