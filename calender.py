@@ -16,7 +16,7 @@ st.set_page_config(page_title='納期カレンダー作成')
 st.markdown('#### 納期カレンダー作成')
 
 public_holiday_csv_url="https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
-public_holiday2 = public_holiday_csv_url.split("/")[-1]
+public_holiday2 = public_holiday_csv_url.split("/")[-1] #ファイル名の取り出し
 
 # 対象年度
 target_year = 2022
@@ -39,15 +39,14 @@ def get_kadoubi(date):
     
     # 祝日
     holidays_df = pd.read_table(public_holiday2, delimiter=',', encoding="SHIFT-JIS")
-    if date.strftime(year + "/" + month + "/" + day) in holidays_df['国民の祝日・休日名称'].tolist():
-        return False
+    if date.strftime(year + "/" + month + "/" + day) in holidays_df['国民の祝日・休日月日'].tolist():
+        return False 
 
     #　会社の休日
     if date.strftime(year + "/" + month + "/" + day) in company_holiday:
         return False
 
-    return True
-
+    return True 
 
 def get_chakubi(date):
     # 0埋め解消　祝日ファイルに合わせて
@@ -81,6 +80,7 @@ def generate_pdf():
     df = DataFrame()
     if uploaded_file:
         df = tabula.read_pdf(uploaded_file, lattice=True) #dfのリストで出力される
+
     #表が格子状になっている場合 lattice=True そうでない　stream=True　複数ページ読み込み pages='all'
     df_calend = df[0]
     df_calend = df_calend.dropna(how='any')
@@ -237,6 +237,7 @@ def generate_pdf():
 
     st.markdown('###### GW、お盆、年末年始等が絡む期間は使用を避けてください。')
     st.markdown(get_table_download_link(df_output), unsafe_allow_html=True)
+    st.caption('selected {}'.format(option_day))
     st.caption('5日まで検証済')
 
 if __name__ == '__main__':
