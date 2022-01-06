@@ -226,17 +226,23 @@ def generate_pdf():
         processed_data = output.getvalue()
         return processed_data
 
-    def get_table_download_link(df):
-        """Generates a link allowing the data in a given panda dataframe to be downloaded
-        in:  dataframe
-        out: href string
-        """
-        val = to_excel(df_output)
-        b64 = base64.b64encode(val)  # val looks like b'...'
-        return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="Calender.xlsx">Download Excel file</a>' # decode b'abc' => abc
+    # def get_table_download_link(df):
+    #     """Generates a link allowing the data in a given panda dataframe to be downloaded
+    #     in:  dataframe
+    #     out: href string
+    #     """
+    #     val = to_excel(df_output)
+    #     b64 = base64.b64encode(val)  # val looks like b'...'
+    #     return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="Calender.xlsx">Download Excel file</a>' # decode b'abc' => abc
+    
+    df_xlsx = to_excel(df)
+    st.download_button(label='Download Excel file',
+                                    data=df_xlsx ,
+                                    file_name= 'calender.xlsx')
+
 
     st.markdown('###### GW、お盆、年末年始等が絡む期間は使用を避けてください。')
-    st.markdown(get_table_download_link(df_output), unsafe_allow_html=True)
+    # st.markdown(get_table_download_link(df_output), unsafe_allow_html=True)
     st.caption('selected {}'.format(option_day))
     st.caption('5日まで検証済')
 
