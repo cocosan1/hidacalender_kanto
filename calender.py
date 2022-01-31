@@ -78,8 +78,12 @@ def generate_pdf():
     # ***ファイルアップロード 今期***
     uploaded_file = st.file_uploader('出荷日表PDFの読み込み', type='pdf', key='shukka')
     df = DataFrame()
-    if uploaded_file:
+    if not uploaded_file:
+        st.info('出荷日表PDFを選択してください。')
+        st.stop() 
+    elif uploaded_file:
         df = tabula.read_pdf(uploaded_file, lattice=True) #dfのリストで出力される
+       
 
     #表が格子状になっている場合 lattice=True そうでない　stream=True　複数ページ読み込み pages='all'
     df_calend = df[0]
@@ -215,6 +219,26 @@ def generate_pdf():
     })
 
     def to_excel(df):
+        # ***ファイルアップロード フォーム***
+        # uploaded_file = st.file_uploader('納期カレンダーフォーム(Excel)の読み込み', type='xlsx', key='form')
+        # if not uploaded_file:
+        #     st.info('納期カレンダー 書式（Excel）を選択してください。')
+        #     st.stop()
+        # elif uploaded_file:
+        #     workbook = openpyxl.load_workbook(uploaded_file)
+        #     sheet = workbook.active #アクティブなワークシートを選択
+        #     row_index = 8 #書き込み開始行　1から始まる
+
+        #     for index, rows in df.iterrows():
+        #         col_index = 1 #書き込み開始列 1から始まる
+        #         for data in rows:
+        #             sheet.cell(row=row_index, column=col_index, value=data) #指定したセルにデータの書き込み
+        #             col_index = col_index + 1 #書き込む列数をずらす
+        #         row_index = row_index + 1 #書き込む行数をずらす
+        #     workbook.save("calender1.xlsx")
+        # st.download_button(label='Download Excel file', data=sheet.values, file_name= 'calender.xlsx')           
+
+
         output = BytesIO()
         writer = pd.ExcelWriter(output, engine='xlsxwriter')
         df_output.to_excel(writer, index = False, sheet_name='Sheet1')
@@ -226,19 +250,10 @@ def generate_pdf():
         processed_data = output.getvalue()
         return processed_data
 
-    # def get_table_download_link(df):
-    #     """Generates a link allowing the data in a given panda dataframe to be downloaded
-    #     in:  dataframe
-    #     out: href string
-    #     """
-    #     val = to_excel(df_output)
-    #     b64 = base64.b64encode(val)  # val looks like b'...'
-    #     return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="Calender.xlsx">Download Excel file</a>' # decode b'abc' => abc
-    
-    df_xlsx = to_excel(df)
-    st.download_button(label='Download Excel file',
-                                    data=df_xlsx ,
-                                    file_name= 'calender.xlsx')
+  
+    # to_excel(df_output)
+    df_xlsx = to_excel(df_output)
+    st.download_button(label='Download Excel file', data=df_xlsx, file_name= 'calender.xlsx')
 
 
     st.markdown('###### GW、お盆、年末年始等が絡む期間は使用を避けてください。')
