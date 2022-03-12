@@ -22,7 +22,7 @@ public_holiday2 = public_holiday_csv_url.split("/")[-1] #ファイル名の取�
 target_year = 2022
 
 # 会社特有の休日
-company_holiday = []
+company_holiday = [2022/4/29, 2022/4/30, 2022/5/2, 2022/8/12, 2022/8/13, 2022/8/15, 2022/8/16]
 
 kadoubi = []
 chakubi = []
