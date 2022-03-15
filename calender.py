@@ -33,6 +33,10 @@ def get_kadoubi(date):
     month = date.strftime("%m").lstrip("0") #strの左から0を削除
     day = date.strftime("%d").lstrip("0")
 
+    # 土曜日
+    if (date.weekday() == 5): # 0月曜 6日曜
+        return False
+
     # 日曜日
     if (date.weekday() == 6): # 0月曜 6日曜
         return False
@@ -53,6 +57,10 @@ def get_chakubi(date):
     year = date.strftime("%Y")
     month = date.strftime("%m").lstrip("0")
     day = date.strftime("%d").lstrip("0")
+
+    # 土曜日
+    if (date.weekday() == 5): # 0月曜 6日曜
+        return False
 
     # 日曜日
     if (date.weekday() == 6): # 0月曜 6日曜
@@ -124,7 +132,7 @@ def generate_pdf():
     day_list = [1, 2, 3, 4, 5, 6, 7]
     option_day = st.radio(
      "出荷日の次の日から何日後を着日とするか？（稼働日）",
-     day_list, index=4
+     day_list, index=2
     )
 
     arrival_ex = []
